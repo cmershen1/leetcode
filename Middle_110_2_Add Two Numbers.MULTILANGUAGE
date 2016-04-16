@@ -1,0 +1,68 @@
+方法一：
+import java.math.BigInteger;
+
+public class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        BigInteger num1 = BigInteger.ZERO;
+        BigInteger num2 = BigInteger.ZERO;
+        BigInteger temp = BigInteger.ONE;
+        
+        while(l1!=null) {
+        	//num1+=temp*l1.val;
+        	num1=num1.add(temp.multiply(BigInteger.valueOf(l1.val)));
+        	temp=temp.multiply(BigInteger.TEN);
+        	l1=l1.next;
+        }
+        temp=BigInteger.ONE;
+        while(l2!=null) {
+        	num2=num2.add(temp.multiply(BigInteger.valueOf(l2.val)));
+        	temp=temp.multiply(BigInteger.TEN);
+        	l2=l2.next;
+        }
+        BigInteger sum = num1.add(num2);
+        if(sum.compareTo(BigInteger.ZERO)==0)
+        	return new ListNode(0);
+        else {
+        	ListNode l = new ListNode(sum.mod(BigInteger.TEN).intValue());
+        	ListNode p=l;
+        	while(sum.compareTo(BigInteger.ZERO)!=0) {
+        		sum=sum.divide(BigInteger.TEN);
+        		if(sum.compareTo(BigInteger.ZERO)!=0) {
+            		p.next = new ListNode(sum.mod(BigInteger.TEN).intValue());
+            		p=p.next;
+        		}
+        	}
+        	return l;
+        }
+    }
+}
+方法二：(from discuss)
+struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
+    struct ListNode* result = l1 ? l1 : l2;
+    struct ListNode* carry = l1 ? l2 : l1;
+    struct ListNode* node = result;
+    struct ListNode* tmp;
+    int c = 0;
+    int s;
+    while (l1 || l2) {
+        s = c;
+        if (l1) { s += l1->val; l1=l1->next; }
+        if (l2) { s += l2->val; l2=l2->next; }
+        c = s > 9 ? 1 : 0;
+        node->val = c ? s - 10 : s;
+        if (l1) {
+            node = node->next = l1;
+        } else if (l2) {
+            node = node->next = l2;
+        } else {
+            node->next = NULL;
+        }
+    }
+    if (c) {
+        carry->val = c;
+        node->next = carry;
+        node = node->next;
+    }
+    node->next = NULL;
+    return result;
+}

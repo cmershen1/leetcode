@@ -1,0 +1,15 @@
+方法一：
+int isPalindrome(int x) {
+    int n=0,x2=x;
+    if(x<0)
+        return false;
+    while(x) {
+        n=n*10+x%10;
+        x/=10;
+    }
+    return n==x2;
+}
+方法二：
+class Solution(object):
+    def isPalindrome(self, x):
+        return str(x)==str(x)[::-1]

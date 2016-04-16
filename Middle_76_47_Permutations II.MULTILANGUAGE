@@ -1,0 +1,48 @@
+方法一：
+public class Solution {
+    public static List<List<Integer>> permuteUnique(int[] nums) {
+    	HashMap<Integer,Integer> set = new HashMap<Integer,Integer>();
+    	for(int num:nums) {
+    		if(set.containsKey(num))
+    			set.put(num, set.get(num)+1);
+    		else
+    			set.put(num, 1);    			
+    	}
+        List<List<Integer>> list = new ArrayList<List<Integer>>();
+        backtrack(list, new ArrayList<Integer>(), set, 0);
+        return list;
+    }
+    private static void backtrack(List<List<Integer>> list, List<Integer> sublist, HashMap<Integer,Integer> set,int last) {
+    	boolean allZero = true;
+    	for(int value:set.values()) {
+    		if(value!=0) {
+    			allZero = false;
+    			break;
+            }
+    	}
+    	if(allZero) 
+    		list.add(new ArrayList<Integer>(sublist));
+    	for(int key:set.keySet()) {
+    		if(key != last || sublist.size() == 0) {
+				int times = set.get(key);
+    			for(int j = 1; j <= times; j++) { // count how many keys there are in set,each times add j of them after sublist
+					set.put(key, times-j);
+					for(int k = 0; k<j; k++)
+						sublist.add(key);
+					backtrack(list, sublist, set, key);
+					for(int k = 0; k<j; k++)
+						sublist.remove(sublist.size()-1);
+					set.put(key, times);
+    			}
+    		}
+    	}
+	}
+}
+方法二：
+class Solution(object):
+    def permuteUnique(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        return [[n] + p for n in set(nums) for p in self.permuteUnique(nums[:nums.index(n)] + nums[nums.index(n) + 1:])] or [[]]

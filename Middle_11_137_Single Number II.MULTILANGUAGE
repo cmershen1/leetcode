@@ -1,0 +1,28 @@
+朴素解法：
+public class Solution {
+    public int singleNumber(int[] nums) {
+    	HashMap<Integer,Integer> count=new HashMap<Integer,Integer>();
+    	for(int num:nums) {
+    		if(count.containsKey(num))
+    			count.put(num, count.get(num)+1);
+    		else
+    			count.put(num, 1);
+    	}
+    	for(Integer key:count.keySet())
+    		if(count.get(key)==1)
+    			return key;
+    	return 0;         
+    }
+}
+位运算解法：
+int singleNumber(int nums[], int numsSize) {
+    int single = 0;
+    for (int i = 0; i < 32; i++) {
+        int cnt = 0, bit = 1 << i;
+        for (int j = 0; j < numsSize; j++)
+            if (nums[j] & bit) cnt++;
+        if (cnt % 3 != 0)
+            single |= bit;
+    }
+    return single;
+}
